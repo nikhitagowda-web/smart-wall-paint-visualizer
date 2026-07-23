@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a routerLink="/" class="logo">
+      <i class="fa-solid fa-paint-roller logo-icon"></i>
+      <span>SmartPaint AI</span>
+    </a>
+
+    <div class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <i class="fa-solid fa-house"></i> Home
+      </a>
+      <a routerLink="/visualizer" routerLinkActive="active">
+        <i class="fa-solid fa-palette"></i> Visualizer
+      </a>
+      <a *ngIf="authService.isLoggedIn()" routerLink="/my-projects" routerLinkActive="active">
+        <i class="fa-solid fa-folder-open"></i> My Projects
+      </a>
+    </div>
+
+    <div class="nav-auth">
+      <ng-container *ngIf="currentUser; else loggedOut">
+        <span class="user-greeting">
+          <i class="fa-solid fa-circle-user"></i> {{ currentUser.name }}
+        </span>
+        <button (click)="logout()" class="btn-logout">
+          <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
+      </ng-container>
+
+      <ng-template #loggedOut>
+        <a routerLink="/login" class="btn-login">Login</a>
+        <a routerLink="/register" class="btn-register">Register</a>
+      </ng-template>
+    </div>
+  </div>
+</nav>

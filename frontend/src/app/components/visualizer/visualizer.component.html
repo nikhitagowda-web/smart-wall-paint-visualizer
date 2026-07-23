@@ -1,0 +1,91 @@
+<div class="visualizer-container">
+  <!-- Top Action Bar -->
+  <div class="visualizer-header">
+    <div class="project-info">
+      <input type="text" [(ngModel)]="projectTitle" class="title-input" placeholder="Project Name" />
+    </div>
+
+    <div class="header-actions">
+      <label class="btn-upload">
+        <i class="fa-solid fa-camera"></i>
+        <span>{{ isUploading ? 'Uploading...' : 'Upload Room Photo' }}</span>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden [disabled]="isUploading" />
+      </label>
+
+      <button (click)="saveProject()" class="btn-save" [disabled]="isSaving || !uploadedImage">
+        <i class="fa-solid fa-floppy-disk"></i> {{ isSaving ? 'Saving...' : 'Save Project' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="saveStatusMessage" class="status-alert">
+    <i class="fa-solid fa-circle-check"></i> {{ saveStatusMessage }}
+  </div>
+
+  <!-- Interactive Studio Layout -->
+  <div class="studio-layout">
+    <!-- Left Canvas Area -->
+    <div class="canvas-wrapper">
+      <div *ngIf="!uploadedImage" class="canvas-placeholder">
+        <i class="fa-solid fa-image placeholder-icon"></i>
+        <h3>No Room Image Loaded</h3>
+        <p>Upload a clear photo of your wall or room space to start visualizing custom paint colors.</p>
+        <label class="btn-primary-large">
+          <i class="fa-solid fa-upload"></i> Choose Image File
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden />
+        </label>
+      </div>
+
+      <div class="canvas-container" [style.display]="uploadedImage ? 'block' : 'none'">
+        <div class="canvas-toolbar">
+          <button (click)="completeWallSelection()" class="btn-tool">
+            <i class="fa-solid fa-check"></i> Complete Wall Section
+          </button>
+          <button (click)="clearSelections()" class="btn-tool danger">
+            <i class="fa-solid fa-trash-can"></i> Reset Walls
+          </button>
+          <span class="tool-hint">Click multiple corner points on a wall to outline it.</span>
+        </div>
+
+        <canvas #canvasElement (click)="onCanvasClick($event)"></canvas>
+      </div>
+    </div>
+
+    <!-- Right Controls & Color Palette -->
+    <div class="palette-sidebar">
+      <h3><i class="fa-solid fa-palette"></i> Paint Palette</h3>
+
+      <!-- Color Swatches Grid -->
+      <div class="color-grid">
+        <div 
+          *ngFor="let color of colors" 
+          class="color-card"
+          [class.selected]="selectedColor?._id === color._id"
+          (click)="selectColor(color)"
+        >
+          <div class="swatch" [style.background-color]="color.hexCode"></div>
+          <div class="color-details">
+            <span class="color-name">{{ color.name }}</span>
+            <span class="color-brand">{{ color.brand }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paint Controls -->
+      <div class="control-group">
+        <label>Paint Opacity (Coverage): {{ (opacity * 100).toFixed(0) }}%</label>
+        <input type="range" min="0.2" max="0.9" step="0.05" [(ngModel)]="opacity" (input)="redrawCanvas()" />
+      </div>
+
+      <div class="control-group">
+        <label>Paint Finish</label>
+        <select [(ngModel)]="finish" (change)="redrawCanvas()" class="select-finish">
+          <option value="matte">Matte (Flat)</option>
+          <option value="eggshell">Eggshell</option>
+          <option value="satin">Satin</option>
+          <option value="glossy">Glossy / Semi-Gloss</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

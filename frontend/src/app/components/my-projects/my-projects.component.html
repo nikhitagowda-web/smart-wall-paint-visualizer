@@ -1,0 +1,48 @@
+<div class="projects-container">
+  <div class="projects-header">
+    <div>
+      <h2><i class="fa-solid fa-folder-open"></i> My Saved Projects</h2>
+      <p>View and manage all your wall paint visualizer designs</p>
+    </div>
+    <a routerLink="/visualizer" class="btn-primary">
+      <i class="fa-solid fa-plus"></i> New Design
+    </a>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    <i class="fa-solid fa-spinner fa-spin spinner"></i>
+    <p>Loading your saved room designs...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-error">
+    <i class="fa-solid fa-circle-exclamation"></i> {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && projects.length === 0" class="empty-state">
+    <i class="fa-solid fa-paintbrush empty-icon"></i>
+    <h3>No Projects Saved Yet</h3>
+    <p>Upload a photo in the Visualizer, test out paint colors, and save your favorite room concepts here.</p>
+    <a routerLink="/visualizer" class="btn-primary">Start Designing Now</a>
+  </div>
+
+  <div *ngIf="!isLoading && projects.length > 0" class="projects-grid">
+    <div *ngFor="let project of projects" class="project-card">
+      <div class="card-image-wrapper">
+        <img [src]="project.savedImageUrl || project.originalImageUrl" [alt]="project.title" class="project-img" />
+      </div>
+      <div class="card-body">
+        <h3 class="project-title">{{ project.title }}</h3>
+        
+        <div class="project-meta" *ngIf="project.selectedColor">
+          <div class="color-badge">
+            <span class="swatch" [style.background-color]="project.selectedColor.hexCode"></span>
+            <span>{{ project.selectedColor.name }}</span>
+          </div>
+          <span class="finish-tag">{{ project.finish | uppercase }}</span>
+        </div>
+
+        <p class="created-date">Saved on {{ project.createdAt | date:'mediumDate' }}</p>
+      </div>
+    </div>
+  </div>
+</div>

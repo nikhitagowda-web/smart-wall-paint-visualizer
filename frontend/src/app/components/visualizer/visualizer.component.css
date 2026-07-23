@@ -1,0 +1,273 @@
+.visualizer-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.visualizer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 20px;
+}
+
+.title-input {
+  font-size: 1.25rem;
+  font-weight: 600;
+  border: 1px transparent;
+  border-bottom: 2px solid #cbd5e1;
+  padding: 4px 8px;
+  font-family: inherit;
+  color: #0f172a;
+}
+
+.title-input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-upload, .btn-save {
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-upload {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+.btn-upload:hover {
+  background-color: #e2e8f0;
+}
+
+.btn-save {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.btn-save:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.status-alert {
+  background-color: #f0fdf4;
+  color: #166534;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #bbf7d0;
+}
+
+.studio-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+}
+
+.canvas-wrapper {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.canvas-placeholder {
+  text-align: center;
+  max-width: 420px;
+}
+
+.placeholder-icon {
+  font-size: 3.5rem;
+  color: #94a3b8;
+  margin-bottom: 16px;
+}
+
+.canvas-placeholder h3 {
+  font-size: 1.3rem;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.canvas-placeholder p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+.btn-primary-large {
+  background-color: #2563eb;
+  color: #ffffff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.canvas-container {
+  width: 100%;
+}
+
+.canvas-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.btn-tool {
+  background-color: #f1f5f9;
+  color: #334155;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-tool:hover {
+  background-color: #e2e8f0;
+}
+
+.btn-tool.danger {
+  color: #ef4444;
+}
+
+.btn-tool.danger:hover {
+  background-color: #fee2e2;
+}
+
+.tool-hint {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-left: auto;
+}
+
+canvas {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  cursor: crosshair;
+}
+
+.palette-sidebar {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 20px;
+}
+
+.palette-sidebar h3 {
+  font-size: 1.1rem;
+  color: #0f172a;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 24px;
+  padding-right: 4px;
+}
+
+.color-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.color-card:hover, .color-card.selected {
+  border-color: #2563eb;
+  background-color: #eff6ff;
+}
+
+.swatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.color-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.color-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.color-brand {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.control-group {
+  margin-bottom: 18px;
+}
+
+.control-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.control-group input[type="range"] {
+  width: 100%;
+}
+
+.select-finish {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
