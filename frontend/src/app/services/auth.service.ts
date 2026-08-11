@@ -1,55 +1,41 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api/auth';
-  private currentUserSubject = new BehaviorSubject<any>(this.getUserFromStorage());
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+  public isLoggedIn$: Observable<boolean> = this.isLoggedInSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
-
-  private getUserFromStorage() {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+  constructor() {
+    // Check local storage for existing session token
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      this.isLoggedInSubject.next(true);
+    }
   }
 
-  register(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, userData);
+  // Handle User Login
+  login(token: string = 'demo-jwt-token'): void {
+    localStorage.setItem('auth_token', token);
+    this.isLoggedInSubject.next(true);
   }
 
-  login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
-      tap((res: any) => {
-        if (res.token) {
-          localStorage.setItem('token', res.token);
-          localStorage.setItem('user', JSON.stringify(res.user));
-          this.currentUserSubject.next(res.user);
-        }
-      })
-    );
+  // Handle User Registration
+  register(userData?: any): void {
+    localStorage.setItem('auth_token', 'demo-registered-jwt-token');
+    this.isLoggedInSubject.next(true);
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    this.currentUserSubject.next(null);
+  // Handle User Logout
+  logout(): void {
+    localStorage.removeItem('auth_token');
+    this.isLoggedInSubject.next(false);
   }
 
-  getToken(): string | null {
-    return localStorage.getItem('token');
-  }
-
-  isLoggedIn(): boolean {
-    return !!this.getToken();
-  }
-
-  isAdmin(): boolean {
-    const user = this.currentUserSubject.value;
-    return user && user.role === 'admin';
+  // Helper method to check active session status
+  isAuthenticated(): boolean {
+    return this.isLoggedInSubject.value;
   }
 }

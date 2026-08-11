@@ -1,0 +1,69 @@
+.app-header {
+  background-color: #0f172a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  font-size: 22px;
+}
+
+.logo-text {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav-menu a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-menu a:hover,
+.nav-menu a.active-link {
+  color: #38bdf8;
+}
+
+.nav-btn-login {
+  background-color: #0284c7;
+  color: #ffffff !important;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.nav-btn-login:hover {
+  background-color: #0369a1;
+}
+
+.content-body {
+  min-height: calc(100vh - 70px);
+  background-color: #f8fafc;
+}

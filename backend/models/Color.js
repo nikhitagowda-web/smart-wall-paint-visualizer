@@ -1,34 +1,22 @@
 const mongoose = require('mongoose');
 
-const colorSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    hexCode: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    brand: {
-      type: String,
-      default: 'Behr Paint',
-    },
-    finish: {
-      type: String,
-      enum: ['matte', 'glossy', 'satin', 'eggshell'],
-      default: 'matte',
-    },
-    category: {
-      type: String,
-      default: 'General',
-    },
+const ColorSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
   },
-  {
-    timestamps: true,
+  hex: {
+    type: String,
+    required: true
+  },
+  brand: {
+    type: String,
+    default: 'Generic'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
-);
+});
 
-module.exports = mongoose.model('Color', colorSchema);
+module.exports = mongoose.model('Color', ColorSchema);

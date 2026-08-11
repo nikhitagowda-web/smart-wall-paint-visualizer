@@ -1,47 +1,118 @@
-<div class="projects-container">
-  <div class="projects-header">
-    <div>
-      <h2><i class="fa-solid fa-folder-open"></i> My Saved Projects</h2>
-      <p>View and manage all your wall paint visualizer designs</p>
+<div class="visualizer-container">
+  <!-- Welcoming Hero Banner Section -->
+  <div class="hero-section" *ngIf="!imageLoaded">
+    <div class="hero-content">
+      <span class="hero-badge">✨ AI-Powered Interior Planning</span>
+      <h1>Transform Your Space with Smart Color Visualization</h1>
+      <p class="hero-description">
+        Visualize wall colors, dual-tone accent gradients, and paint finishes on your actual room walls before buying physical paint.
+      </p>
     </div>
-    <a routerLink="/visualizer" class="btn-primary">
-      <i class="fa-solid fa-plus"></i> New Design
-    </a>
   </div>
 
-  <div *ngIf="isLoading" class="loading-state">
-    <i class="fa-solid fa-spinner fa-spin spinner"></i>
-    <p>Loading your saved room designs...</p>
-  </div>
-
-  <div *ngIf="errorMessage" class="alert alert-error">
-    <i class="fa-solid fa-circle-exclamation"></i> {{ errorMessage }}
-  </div>
-
-  <div *ngIf="!isLoading && projects.length === 0" class="empty-state">
-    <i class="fa-solid fa-paintbrush empty-icon"></i>
-    <h3>No Projects Saved Yet</h3>
-    <p>Upload a photo in the Visualizer, test out paint colors, and save your favorite room concepts here.</p>
-    <a routerLink="/visualizer" class="btn-primary">Start Designing Now</a>
-  </div>
-
-  <div *ngIf="!isLoading && projects.length > 0" class="projects-grid">
-    <div *ngFor="let project of projects" class="project-card">
-      <div class="card-image-wrapper">
-        <img [src]="project.savedImageUrl || project.originalImageUrl" [alt]="project.title" class="project-img" />
+  <!-- Step 1: Upload Room Photo Section (With Auth Check) -->
+  <div class="upload-section" *ngIf="!imageLoaded">
+    <div class="upload-card">
+      <div *ngIf="!isLoggedIn" class="auth-notice">
+        <p>🔒 <strong>Login Required:</strong> Please log in to your account to upload room photos and save your wall designs.</p>
+        <a routerLink="/login" class="btn-login-prompt">Log In / Register Now</a>
       </div>
-      <div class="card-body">
-        <h3 class="project-title">{{ project.title }}</h3>
-        
-        <div class="project-meta" *ngIf="project.selectedColor">
-          <div class="color-badge">
-            <span class="swatch" [style.background-color]="project.selectedColor.hexCode"></span>
-            <span>{{ project.selectedColor.name }}</span>
-          </div>
-          <span class="finish-tag">{{ project.finish | uppercase }}</span>
-        </div>
 
-        <p class="created-date">Saved on {{ project.createdAt | date:'mediumDate' }}</p>
+      <label class="upload-box" [class.disabled-box]="!isLoggedIn">
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden [disabled]="!isLoggedIn" />
+        <span class="upload-icon">📷</span>
+        <h3>Upload Room Photo</h3>
+        <p>{{ isLoggedIn ? 'Select a clear JPG or PNG photo of your room' : 'Log in above to enable image upload' }}</p>
+      </label>
+
+      <div class="ownership-disclaimer">
+        <p>🔒 <strong>Privacy & Copyright Notice:</strong> By uploading an image, you confirm that the photo is original, owned by you, and free of copyright or privacy violations.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workspace View -->
+  <div class="workspace" *ngIf="imageLoaded">
+    <div class="controls-panel">
+      <h3>Visualizer Controls</h3>
+
+      <div class="control-group">
+        <label>Paint Application Mode:</label>
+        <div class="mode-selector">
+          <button class="mode-btn" [class.active]="wallMode === 'solid'" (click)="wallMode = 'solid'; redrawCanvas()">Single Color</button>
+          <button class="mode-btn" [class.active]="wallMode === 'dualtone'" (click)="wallMode = 'dualtone'; redrawCanvas()">Dual-Tone</button>
+          <button class="mode-btn" [class.active]="wallMode === 'compare'" (click)="wallMode = 'compare'; redrawCanvas()">Compare Colors</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>{{ wallMode === 'compare' ? 'Color Option A (Left Side):' : (wallMode === 'dualtone' ? 'Top Color:' : 'Select Paint Swatch:') }}</label>
+        <div class="swatches-grid">
+          <div 
+            *ngFor="let c of colors" 
+            class="swatch" 
+            [ngStyle]="{'background-color': c.hex}"
+            [class.active]="selectedColor === c.hex"
+            (click)="selectedColor = c.hex; redrawCanvas()"
+            [title]="c.name + ' (' + c.brand + ')'">
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group" *ngIf="wallMode === 'dualtone' || wallMode === 'compare'">
+        <label>{{ wallMode === 'compare' ? 'Color Option B (Right Side):' : 'Bottom Accent Color:' }}</label>
+        <div class="swatches-grid">
+          <div 
+            *ngFor="let c of colors" 
+            class="swatch" 
+            [ngStyle]="{'background-color': c.hex}"
+            [class.active]="secondaryColor === c.hex"
+            (click)="secondaryColor = c.hex; redrawCanvas()"
+            [title]="c.name + ' (' + c.brand + ')'">
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Paint Finish:</label>
+        <select [(ngModel)]="selectedFinish" (change)="redrawCanvas()" class="select-input">
+          <option value="matte">Matte Finish</option>
+          <option value="eggshell">Eggshell Finish</option>
+          <option value="satin">Satin Finish</option>
+          <option value="glossy">Glossy Finish</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>Paint Opacity: {{ opacity | percent }}</label>
+        <input type="range" min="0.2" max="0.9" step="0.05" [(ngModel)]="opacity" (input)="redrawCanvas()" />
+      </div>
+
+      <button class="btn btn-toggle" (click)="toggleBeforeAfter()">
+        {{ showOriginal ? '👁️ Show Painted View (After)' : '🔍 Compare with Original (Before)' }}
+      </button>
+
+      <div class="action-buttons">
+        <button class="btn btn-clear" (click)="clearPoints()">Reset Selected Area</button>
+        <button class="btn btn-change-image" (click)="changeImage()">📷 Upload Different Image</button>
+        <button class="btn btn-download" (click)="downloadImage()">📥 Download High-Res Preview</button>
+      </div>
+    </div>
+
+    <div class="canvas-panel">
+      <div class="canvas-header">
+        <div *ngIf="!showOriginal" class="instructions-badge">
+          Click the corners of the wall on the image to create your paint area.
+        </div>
+        <div *ngIf="showOriginal" class="before-badge">
+          Showing Original Unpainted Room Photo
+        </div>
+      </div>
+      
+      <canvas #canvas (click)="onCanvasClick($event)"></canvas>
+
+      <div class="visual-disclaimer">
+        <p>💡 <strong>Real-Life Decision Note:</strong> Digital previews offer realistic color representations. Actual physical paint may look slightly different depending on room illumination, screen calibration, and wall texture.</p>
       </div>
     </div>
   </div>

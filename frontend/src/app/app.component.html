@@ -1,4 +1,20 @@
-<app-navbar></app-navbar>
-<main>
+<header class="app-header">
+  <div class="nav-container">
+    <div class="brand">
+      <span class="logo-icon">🎨</span>
+      <span class="logo-text">Smart Wall Paint Visualizer</span>
+    </div>
+    
+    <nav class="nav-menu">
+      <a routerLink="/visualizer" routerLinkActive="active-link">Paint Visualizer</a>
+      <a routerLink="/my-projects" routerLinkActive="active-link">Saved Designs</a>
+      <a routerLink="/user-guide" routerLinkActive="active-link">User Guide</a>
+      <a routerLink="/admin-dashboard" routerLinkActive="active-link">Admin Panel</a>
+      <a routerLink="/login" class="nav-btn-login">Login</a>
+    </nav>
+  </div>
+</header>
+
+<main class="content-body">
   <router-outlet></router-outlet>
 </main>
